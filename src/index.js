@@ -1,13 +1,12 @@
 // import {getParametersfromUrl} from "./service/parameters"
 
-import { data } from "cypress/types/jquery"
 
 function showPokemonList (names, callback) {
     names.forEach((name) => {
 
     })
 }   
-function createItemPager (text, page) {
+function createItemPager(text, page) {
     const $item = document.createElement("li")
     const $link = document.createElement("#")
     $link.textContent = text;
@@ -23,8 +22,6 @@ function handleChangePage(event, callback) {
     callback()  
 } 
 function showPager (total, actualPage, nextUrl, prevUrl, callback) {
- 
-    
     
     loadPokemons(offset, limit)
     for(let i = 0; i < total; i++) {
@@ -33,7 +30,7 @@ function showPager (total, actualPage, nextUrl, prevUrl, callback) {
         if(actualPage === $page) {
             $page.classList.add("active")
         }
-        $pager.appednChild($page)
+        $pager.appendChild($page)
     }
     $paginador.onclick = (e) => {
         handleChangePage(e)
@@ -48,15 +45,24 @@ function changePage (page) {
     const POKEMONS_PER_PAGE = 20;
     let offset;
     let limit = POKEMONS_PER_PAGE;
-    if(typeof page === number) {
+    if(typeof page === "number") {
         offset = POKEMONS_PER_PAGE * (page - 1)
     } else {
         const parameters = getParemetersUrl(page)
     }
+    const listPokemons = loadPokemons()
+    console.log(listPokemons)
 }   
-function loadPokemons(offset, limit){
+async function loadPokemons(offset, limit){
     const BASE_URL = "https://pokeapi.co/api/v2/pokemon?offset=0&limit=20"
-    fetch(BASE_URL).json()
+    const response = (await fetch(BASE_URL)).json() 
+    const {
+        count: total,
+        next: siguienteUrl,
+        previous: anteriorUrl,
+        results: resultados,
+      } = response;
+    console.log(total)
 }
 function initialize() {
     return changePage(1)
